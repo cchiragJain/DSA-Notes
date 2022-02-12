@@ -37,7 +37,6 @@ public class BinaryTreeQuestions2 {
     }
 
     /* ----------------------ZIG ZAG TRAVERSAL----------------------- */
-
     public static List<List<Integer>> zigZagTraversal(Node root){
         // T.C -> O(N) S.C -> O(N)
         // similar to level order traversal with a flag variable
@@ -101,7 +100,7 @@ public class BinaryTreeQuestions2 {
         return wrapList;
     }
 
-    /* -----------------------BOUNDARY TRAVERSAL-------------------------  */
+    /* -----------------------BOUNDARY TRAVERSAL---------------------  */
     public static List<Integer> printBoundaryTraversal(Node root){
         // T.C -> O(h) + O(n) + O(h) -> O(N)
         // S.C -> O(N)
@@ -197,10 +196,5 @@ public class BinaryTreeQuestions2 {
     private static boolean isLeaf(Node node){
         // to be a leaf node left and right should be null
         return (node.left == null && node.right == null);
-    }
-
-    /* -----------------------VERTICAL ORDER TRAVERSAL--------------------- */
-    public static List<List<Integer>> verticalOrderTraversal(Node root){
-        
     }
 }

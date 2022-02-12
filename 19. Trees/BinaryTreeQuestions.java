@@ -217,19 +217,7 @@ public class BinaryTreeQuestions {
     }
 
     /* traverses in all three ways using a single traversal */
-    /* recursive implementation probably not something the interviewer would want
-    public static void allTraversalsInOne(Node root,List<Integer> preorder,List<Integer> inorder,List<Integer> postorder){
-        if(root == null){
-            return;
-        }
-
-        preorder.add(root.data);
-        allTraversalsInOne(root.left,preorder,inorder,postorder);
-        inorder.add(root.data);
-        allTraversalsInOne(root.right,preorder,inorder,postorder);
-        postorder.add(root.data);
-    } 
-    */
+    
     
     public static List<List<Integer>> allTraversalsInOne(Node root){
         List<List<Integer>> wrapList = new ArrayList<List<Integer>>();
@@ -276,6 +264,20 @@ public class BinaryTreeQuestions {
         wrapList.add(postOrder);
 
         return wrapList;
+
+        /* recursive implementation probably not something the interviewer would want
+        public static void allTraversalsInOne(Node root,List<Integer> preorder,List<Integer> inorder,List<Integer> postorder){
+            if(root == null){
+                return;
+            }
+    
+            preorder.add(root.data);
+            allTraversalsInOne(root.left,preorder,inorder,postorder);
+            inorder.add(root.data);
+            allTraversalsInOne(root.right,preorder,inorder,postorder);
+            postorder.add(root.data);
+        } 
+        */
     }
 
     /* -----------------------HEIGHT,SUM,MIN/MAX--------------------- */
