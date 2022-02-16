@@ -1,6 +1,7 @@
 import java.util.*;
 
 /* 
+    Refer notebook for question definitions
     Contains ->
         1. Preorder (Recursive & Iterative)
         2. Postorder (Recursive & Iterative)
@@ -13,6 +14,7 @@ import java.util.*;
         9. Get Maximum Path sum
         10. Check Identical Trees
 */
+
 public class BinaryTreeQuestions {
     public static void main(String[] args) {
         Node root = new Node(1);
@@ -47,6 +49,7 @@ public class BinaryTreeQuestions {
         // System.out.println();
 
         // System.out.print(levelOrder(root));
+        // printKLevelsDown(root,2);
 
         // preorderIterative(root);
 
@@ -68,7 +71,7 @@ public class BinaryTreeQuestions {
 
     }
 
-    /* ------------------------TRAVERSALS--------------------------- */
+    /* --------------------RECURSIVE TRAVERSALS----------------------- */
 
     /* Root left right */
     public static void preorder(Node root){
@@ -103,7 +106,29 @@ public class BinaryTreeQuestions {
         System.out.print(root.data + " ");
     }
 
-    /* Using a list since LC uses it for their questions */
+    /* ---------------------PRINT K LEVEL DOWN---------------------------
+        Given root node of a tree and a value k print all nodes at level k
+        k starts from 0 
+     */
+    public static void printKLevelsDown(Node root,int k){
+        if(root == null || k < 0){
+            return;
+        }
+
+        // 0 toh hame karna atta hi h 
+        if(k == 0){
+            System.out.print(root.data + " ");
+        }
+
+        // agar root ke liye k h toh root.left ke liye k - 1 level hoge
+        printKLevelsDown(root.left,k - 1);
+        printKLevelsDown(root.right,k - 1);
+    }
+    
+    /* ------------------LEVEL ORDER TRAVERSAL------------------------
+        Do traversal level by level
+        Using a List<List> since LC uses it for their questions 
+    */
     public static List<List<Integer>> levelOrder(Node root){
         List<List<Integer>> wrapList = new ArrayList<List<Integer>>();
         if(root == null){
@@ -142,8 +167,14 @@ public class BinaryTreeQuestions {
         }
 
         return wrapList;
+
+        /* NAIVE T.C -> O(N^2)
+            Naive way would be to first calculate the height then for each 
+            i = 0;i<=height;i++ call printNodesAtKLevel(root,i);
+         */
     }
 
+    /* -----------------ITERATIVE TRAVERSALS------------------------- */
     /* root left right*/
     public static void preorderIterative(Node root){
         Stack<Node> st = new Stack<>();
@@ -193,6 +224,7 @@ public class BinaryTreeQuestions {
 
     /* left right root  */
     public static void postorderIterative(Node root){
+        // do a dry run for why this works
         Stack<Node> helper = new Stack<>();
         Stack<Node> postorder = new Stack<>();
 
@@ -216,9 +248,9 @@ public class BinaryTreeQuestions {
         } 
     }
 
-    /* traverses in all three ways using a single traversal */
-    
-    
+    /* -------------------ALL TRAVERSALS IN ONE------------------------- 
+        Do all traversals in a single function iterative
+    */
     public static List<List<Integer>> allTraversalsInOne(Node root){
         List<List<Integer>> wrapList = new ArrayList<List<Integer>>();
 
@@ -240,7 +272,7 @@ public class BinaryTreeQuestions {
                 // increase val to 2 to let it go for inorder
                 it.val++;
 
-                // if left exists go to
+                // if left exists
                 if(it.node.left != null){
                     st.push(new Pair(it.node.left,1));
                 }
@@ -266,11 +298,12 @@ public class BinaryTreeQuestions {
         return wrapList;
 
         /* recursive implementation probably not something the interviewer would want
+        // use helper to call with list
         public static void allTraversalsInOne(Node root,List<Integer> preorder,List<Integer> inorder,List<Integer> postorder){
             if(root == null){
                 return;
             }
-    
+
             preorder.add(root.data);
             allTraversalsInOne(root.left,preorder,inorder,postorder);
             inorder.add(root.data);
@@ -280,7 +313,7 @@ public class BinaryTreeQuestions {
         */
     }
 
-    /* -----------------------HEIGHT,SUM,MIN/MAX--------------------- */
+    /* -----------------------HEIGHT,SIZE,MIN/MAX--------------------- */
 
     public static int getHeight(Node root){
         if(root == null){
@@ -324,7 +357,9 @@ public class BinaryTreeQuestions {
         return Math.max(root.data,maxValueOfSubtrees);
     }
     
-    /* -------------------CHECK BALANCED BINARY TREE----------------- */
+    /* -------------------CHECK BALANCED BINARY TREE----------------- 
+        abs(height(left) - height(right)) <= 1
+    */
 
     public static boolean isBalancedBinaryTreeNaive(Node root){
         // T.C -> O(n^2)
@@ -343,6 +378,7 @@ public class BinaryTreeQuestions {
         }
 
         // check left and right nodes if they are balanced
+        // for a tree to be balanced all subtrees should be balanced as well
         boolean isLeftBalanced = isBalancedBinaryTreeNaive(root.left);
         boolean isRightBalanced = isBalancedBinaryTreeNaive(root.right);
 
@@ -356,10 +392,12 @@ public class BinaryTreeQuestions {
     public static boolean isBalancedBinaryTreeEfficient(Node root){
         // T.C -> O(n)
         // helper will return -1 if any of the tree not tree balanced 
+        // if everything is balanced will return the height but don't need it 
         return isBalancedBinaryTreeEfficientHelper(root) != -1;
     }
 
-    public static int isBalancedBinaryTreeEfficientHelper(Node root){
+    private static int isBalancedBinaryTreeEfficientHelper(Node root){
+        // this is same as used in calculate height with slight modifications
         // T.C -> O(n)
         if(root == null){
             return 0;
@@ -375,7 +413,7 @@ public class BinaryTreeQuestions {
             return -1;
         }
         
-        // isBalancedBinaryTreeEfficientHelper if the current node is balanced or not
+        // check if the current node is balanced or not
         if(Math.abs(leftHeight - rightHeight) > 1){
             return -1;
         }
@@ -384,7 +422,10 @@ public class BinaryTreeQuestions {
         return 1 + Math.max(leftHeight,rightHeight);
     }
 
-    /* --------------------DIAMETER OF BINARY TREE------------------- */
+    /* --------------------DIAMETER OF BINARY TREE------------------- 
+        Longest path b/w 2 nodes
+        Path does not have to pass through a node
+    */
     public static int getDiameterNaive(Node root){
         // T.C -> O(n^2)
         // in each call of getDiameterNaive also calling getHeight() which is a O(n) call in itself
@@ -400,37 +441,38 @@ public class BinaryTreeQuestions {
         int leftDiameter = getDiameterNaive(root.left);
         int rightDiameter = getDiameterNaive(root.right);
 
-        int maximumDiameterFromSubtree = Math.max(leftDiameter,rightDiameter);
+        int maximumDiameterFromSubtrees = Math.max(leftDiameter,rightDiameter);
 
-        return Math.max(diameter,maximumDiameterFromSubtree);
+        return Math.max(diameter,maximumDiameterFromSubtrees);
     }
 
     public static int getDiameterEfficient(Node root){
         // T.C -> O(n)
 
-        // need to create this or use a global variable generally not preferred 
-        int[] diameter = new int[1];
-        getDiameterEfficientHelper(root,diameter);
-        return diameter[0];
+        Ref maxDiameter = new Ref(0);
+        getDiameterEfficientHelper(root,maxDiameter);
+        return maxDiameter;
     }
 
-    private static int getDiameterEfficientHelper(Node root,int[] d){
+    private static int getDiameterEfficientHelper(Node root,Ref maxDiameter){
         if(root == null){
             return 0;
         }
 
         // get height of left and right subtree
-        int leftHeight = getDiameterEfficientHelper(root.left,d);
-        int rightHeight = getDiameterEfficientHelper(root.right,d);
+        int leftHeight = getDiameterEfficientHelper(root.left,maxDiameter);
+        int rightHeight = getDiameterEfficientHelper(root.right,maxDiameter);
 
         // at every node calculate the maximum of diameter found till date and of the path that passes throught the current node
-        d[0] = Math.max(d[0],leftHeight + rightHeight);
+        maxDiameter.val = Math.max(maxDiameter.val,leftHeight + rightHeight);
 
         // return height normally
         return 1 + Math.max(leftHeight,rightHeight);
     }
 
-    /* -------------------------MAXIMUM PATH SUM--------------------- */
+    /* -------------------------MAXIMUM PATH SUM---------------------
+        Calculate the max sum of any path in the tree
+    */
     public static int getMaximumPathSum(Node root){
         // T.C -> O(n)
 
@@ -448,11 +490,12 @@ public class BinaryTreeQuestions {
             return 0;
         }
         
-        // get the max path sum on the left & right
-        // if left or right returns 0 that means they had negative path sum and don't want to include that in the max sum
+        // get the max path sum down on the left & right
+        // if left or right returns <0 that means they had negative path sum and don't want to include that in the max sum
         int left = Math.max(0,getMaxPathSumDown(root.left,maxSum));
         int right = Math.max(0,getMaxPathSumDown(root.right,maxSum));
 
+        // this is calculating max path sum and not max path sum on down
         // update maxSum if the current nodes path > maxSum
         // max sum will be always in this shape -> Λ (umbrelaa shape)
         // even if left or right 0 then 0 will be added
@@ -463,7 +506,9 @@ public class BinaryTreeQuestions {
         return Math.max(left,right) + root.data;
     }
 
-    /* -------------------------CHECK SAME TREE---------------------- */
+    /* -------------------------CHECK SAME TREE---------------------- 
+        Given root of 2 trees check if they are the same or not
+    */
     public static boolean isSameTree(Node p,Node q){
         /* 
             To have a iterative solution use two deque and add the initial nodes at the last of the deque
@@ -472,10 +517,10 @@ public class BinaryTreeQuestions {
                 if this returns false return false and the while loop will break
                 if p not null
                     then add the child left and right nodes to both the deque of p and q
-         */
+        */
         if(p == null && q == null) return true;
         
-        // since already checking for null equality above.
+        // since already checking for null equality above & data equality in return.
         if(p == null || q == null) return false;
         
         // check if the current nodes has same data
